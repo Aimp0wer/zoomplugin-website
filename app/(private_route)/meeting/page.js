@@ -1,95 +1,80 @@
 //Meeting Register/Join in Page
-"use client"
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+"use client";
+// App.js
+import { useSession } from "next-auth/react";
+import JoinMeeting from "./JoinMeeting";
+import MessageComponent from "./MessageComponent"; // Import the new component
+import { SettingsSharp, PersonSharp } from "react-ionicons";
 
-const HomePage = () => {
-
-    const [formData, setFormData] = useState({
-        meetingNumber: "",
-        passWord: "",
-        userName: "",
-        role: 0,
-    });
-
-    const router = useRouter();
-
-    // Redirect to zoom page with the form data
-    const joinMeeting = (event) => {
-        event.preventDefault();
-
-        // Construct the query string from the form data
-        const query = new URLSearchParams(formData).toString();
-
-        // Redirect to the zoom page
-        router.push(`/zoom?${query}`);
-    };  
-
-    // Handle Meeting Info data
-    const handleMeetingInfo = (event) => {
-        const { name, value } = event.target;
-        
-        //remove all spaces from meeting number
-        if (name == "meetingNumber") {
-            var formattedValue = value.replace(/\s/g, "");
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                [name]: formattedValue,
-            }));
-        } else {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                [name]: value,
-            }));
-        }
-    };
+function App() {
+    const { data, status } = useSession();
 
     return (
-        <form onSubmit={joinMeeting} className="max-w-sm mx-auto mt-14">
-            <div className="mb-4">
-                <label className="block mb-2">
-                    Meeting ID:
-                    <input
-                        type="text"
-                        name="meetingNumber"
-                        value={formData.meetingNumber}
-                        onChange={handleMeetingInfo}
-                        placeholder="Enter Meeting ID"
-                        className="textbox"
-                    />
-                </label>
+        <div className="p-10">
+            <div className="font-bold text-2xl ">
+                Welcome back {data?.user?.name}!
             </div>
             <div className="mb-4">
-                <label className="block mb-2">
-                    Password:
-                    <input
-                        type="password"
-                        name="passWord"
-                        value={formData.passWord}
-                        onChange={handleMeetingInfo}
-                        placeholder="Enter Password"
-                        className="textbox"
-                    />
-                </label>
+                Good luck in your meetings today! you're going to be amazing.
             </div>
-            <div className="mb-4">
-                <label className="block mb-2">
-                    User Name:
-                    <input
-                        type="text"
-                        name="userName"
-                        value={formData.userName}
-                        onChange={handleMeetingInfo}
-                        placeholder="Enter User Name"
-                        className="textbox"
-                    />
-                </label>
+            <div className="flex">
+                <div className="w-3/5 pr-4">
+                    <JoinMeeting />
+                </div>
+                <div className="w-2/5 flex flex-col">
+                    <div className="border border-black rounded-3xl shadow-lg shadow-gray-500 p-4 flex-grow" style={{ backgroundColor: "#35377D"}}>
+                        <div className="flex text-2xl font-bold mb-4" style={{ color: "#FFFFFF" }}>
+                            <PersonSharp
+                                color={"#FFFFFF"}
+                                height="25px"
+                                width="25px"
+                                className="mt-1 mr-2"
+                            />
+                            My Profile
+                        </div>
+                        <div className="ml-8" style={{ color: "#FFFFFF" }}>
+                            <div>
+                                Access features like badge management, journal
+                                viewing, insights, word bank addition, and more.
+                            </div>
+                            <a
+                                href="/profile"
+                                style={{ color: "#FEBD2F", textDecoration: "none" }}
+                            >
+                                Edit Profile &gt;
+                            </a>
+                        </div>
+                    </div>
+                    <div className="border border-black rounded-3xl shadow-lg shadow-gray-500 p-4 mt-4 flex-grow" style={{ backgroundColor: "#35377D"}}>
+                        <div className="flex align-middle text-2xl font-bold mb-4" style={{ color: "#FFFFFF" }}>
+                            <SettingsSharp
+                                color={"#FFFFFF"}
+                                height="25px"
+                                width="25px"
+                                className="mt-1 mr-2"
+                            />
+                            Settings
+                        </div>
+                        <div className="ml-8" style={{ color: "#FFFFFF" }}>
+                            <div>
+                                Manage your account username, password, contact
+                                information, visual and audio settings, and
+                                more.
+                            </div>
+                            <a
+                                href="/journals"
+                                style={{ color: "#FEBD2F", textDecoration: "none" }}
+                            >
+                                Edit Settings &gt;
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button className="button" type="submit">
-                Join
-            </button>
-        </form>
-    );
-};
+            <MessageComponent />
 
-export default HomePage;
+        </div>
+    );
+}
+
+export default App;
